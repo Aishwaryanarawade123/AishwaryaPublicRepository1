@@ -1,0 +1,70 @@
+import java.util.*;
+
+class Main {
+
+    public static String ArrayChallenge(String[] strArr) {
+        Map<Integer, List<Integer>> tree = new HashMap<>();
+        Set<Integer> children = new HashSet<>();
+        Set<Integer> allNodes = new HashSet<>();
+
+        // Parse the input and construct the tree
+        for (String pair : strArr) {
+            String[] nodes = pair.replaceAll("[()]", "").split(",");
+            int child = Integer.parseInt(nodes[0]);
+            int parent = Integer.parseInt(nodes[1]);
+
+            // Add the child to the parent node
+            tree.putIfAbsent(parent, new ArrayList<>());
+            tree.get(parent).add(child);
+            children.add(child);
+            allNodes.add(parent);
+            allNodes.add(child);
+
+            // Check if a parent has more than 2 children
+            if (tree.get(parent).size() > 2) {
+                return "false";
+            }
+        }
+
+        // Find the root node (a node that is not a child of any other node)
+        allNodes.removeAll(children);
+        if (allNodes.size() != 1) {
+            return "false"; // Must have exactly one root
+        }
+
+        int root = allNodes.iterator().next();
+
+        // Check for cycles and connectivity using DFS
+        Set<Integer> visited = new HashSet<>();
+        if (!isValidBinaryTree(root, tree, visited) || visited.size() != children.size() + 1) {
+            return "false";
+        }
+
+        return "true";
+    }
+
+    private static boolean isValidBinaryTree(int node, Map<Integer, List<Integer>> tree, Set<Integer> visited) {
+        if (visited.contains(node)) {
+            return false; // Cycle detected
+        }
+
+        visited.add(node);
+        if (tree.containsKey(node)) {
+            for (int child : tree.get(node)) {
+                if (!isValidBinaryTree(child, tree, visited)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        // Test cases
+        Scanner s = new Scanner(System.in);
+        String input = s.nextLine();
+        input = input.substring(1, input.length() - 1); // Remove brackets
+        String[] strArr = input.split(", ");
+        System.out.println(ArrayChallenge(strArr));
+    }
+}
