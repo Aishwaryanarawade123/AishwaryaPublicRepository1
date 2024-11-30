@@ -1,0 +1,41 @@
+import java.util.*;
+
+class Main {
+
+    public static int StringChallenge(String str) {
+        int maxUnique = 0;
+
+        // Map to store the first occurrence of each character
+        Map<Character, Integer> charIndexMap = new HashMap<>();
+
+        for (int i = 0; i < str.length(); i++) {
+            char currentChar = str.charAt(i);
+
+            if (charIndexMap.containsKey(currentChar)) {
+                // Calculate the substring between the first occurrence and the current index
+                int startIndex = charIndexMap.get(currentChar) + 1;
+                int endIndex = i;
+
+                // Extract the substring and find unique characters
+                String substring = str.substring(startIndex, endIndex);
+                Set<Character> uniqueChars = new HashSet<>();
+                for (char c : substring.toCharArray()) {
+                    uniqueChars.add(c);
+                }
+
+                // Update the maximum count of unique characters
+                maxUnique = Math.max(maxUnique, uniqueChars.size());
+            } else {
+                // Record the first occurrence of the character
+                charIndexMap.put(currentChar, i);
+            }
+        }
+
+        return maxUnique;
+    }
+
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        System.out.println(StringChallenge(s.nextLine()));
+    }
+}
