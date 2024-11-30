@@ -1,0 +1,13 @@
+// Select the root element
+const rootApp = document.getElementById("root");
+
+// Add a button with the initial text "ON"
+rootApp.innerHTML = '<button id="toggleButton">ON</button>';
+
+// Add an event listener to the button to toggle between ON and OFF
+const button = document.getElementById("toggleButton");
+
+button.addEventListener("click", () => {
+  // Check the current text and toggle it
+  button.textContent = button.textContent === "ON" ? "OFF" : "ON";
+});
