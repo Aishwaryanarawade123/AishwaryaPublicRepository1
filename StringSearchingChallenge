@@ -1,0 +1,60 @@
+import java.util.*;
+
+class Main {
+
+    public static String SearchingChallenge(String[] strArr) {
+        int rows = strArr.length;
+        int cols = strArr[0].length();
+        int[][] matrix = new int[rows][cols];
+
+        // Convert input to a 2D array
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                matrix[i][j] = strArr[i].charAt(j) - '0';
+            }
+        }
+
+        boolean[][] visited = new boolean[rows][cols];
+        int regions = 0;
+
+        // Traverse the matrix
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (matrix[i][j] == 0 && !visited[i][j]) {
+                    dfs(matrix, visited, i, j, rows, cols);
+                    regions++;
+                }
+            }
+        }
+
+        return String.valueOf(regions);
+    }
+
+    // Depth-First Search to mark all cells in the current region
+    private static void dfs(int[][] matrix, boolean[][] visited, int i, int j, int rows, int cols) {
+        // Base conditions
+        if (i < 0 || j < 0 || i >= rows || j >= cols || matrix[i][j] == 1 || visited[i][j]) {
+            return;
+        }
+
+        visited[i][j] = true;
+
+        // Explore all 4 possible directions (up, down, left, right)
+        dfs(matrix, visited, i - 1, j, rows, cols); // up
+        dfs(matrix, visited, i + 1, j, rows, cols); // down
+        dfs(matrix, visited, i, j - 1, rows, cols); // left
+        dfs(matrix, visited, i, j + 1, rows, cols); // right
+    }
+
+    public static void main(String[] args) {
+        // Input
+        Scanner s = new Scanner(System.in);
+        String input = s.nextLine();
+        input = input.substring(1, input.length() - 1); // Remove brackets
+        String[] strArr = input.split("\",\"");
+        strArr[0] = strArr[0].substring(1); // Remove starting quote of first string
+        strArr[strArr.length - 1] = strArr[strArr.length - 1].replace("\"", ""); // Remove ending quote of last string
+
+        System.out.println(SearchingChallenge(strArr));
+    }
+}
